@@ -1,0 +1,78 @@
+﻿@model Boo1.Models.korisnik
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>korisnik</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.idkorisnik)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.idkorisnik)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.prezime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.prezime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.email)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.username)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.username)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.password)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.password)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.profil)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.profil)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.telefon)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.telefon)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.boraviste)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.boraviste)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
