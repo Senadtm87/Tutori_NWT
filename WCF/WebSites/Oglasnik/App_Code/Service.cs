@@ -13,6 +13,8 @@ using System.Web.Script.Serialization;
 // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service" in code, svc and config file together.
 public class Service : IService
 {
+    bazaEntities db = new bazaEntities();
+    #region REST
     #region REST_Korisnik
     public korisnik GetKorisnik(string idkorisnika)
     {
@@ -573,4 +575,316 @@ public class Service : IService
         db.SaveChanges();
     }
 #endregion
+    #endregion
+
+    #region SOAP
+
+    #region SOAP_Korisnik
+    public korisnik Login(string user, string pass)
+    {
+        try
+        {
+            korisnik k = db.korisnik.SingleOrDefault(x => x.username == user && x.password == pass);
+            return k;
+        }
+        catch (Exception) { return null; }
+    }
+
+    public void Logout()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<korisnik> dajKorisnike()
+    {
+        List<korisnik> lista = db.korisnik.Where(x=>true).ToList();
+        return lista;
+    }
+
+    public void unesiKorisnika(korisnik novi)
+    {
+        try
+        {
+            db.korisnik.Add(novi);
+            db.SaveChanges();
+        }
+        catch (Exception) { Console.WriteLine("Nije unesen"); }
+    }
+
+    public void promjeniKorisnika(korisnik novi)
+    {
+        try
+        {
+            db.korisnik.Attach(novi);
+            db.Entry(novi).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void obrisiKorisnika(korisnik novi)
+    {
+        try
+        {
+            db.korisnik.Attach(novi);
+            db.Entry(novi).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+
+    #region SOAP_Tutor
+    public tutor LoginTutor(string user, string pass)
+    {
+        try
+        {
+            tutor k = db.tutor.SingleOrDefault(x => x.username == user && x.password == pass);
+            return k;
+        }
+        catch (Exception) { return null; }
+    }
+
+    public void LogoutTutor()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<tutor> dajTutore()
+    {
+        List<tutor> lista = db.tutor.Where(x=>true).ToList();
+        return lista;
+    }
+
+    public void unesiTutora(tutor novi)
+    {
+         try
+        {
+            db.tutor.Add(novi);
+            db.SaveChanges();
+        }
+        catch (Exception) { Console.WriteLine("Nije unesen"); }
+    }
+
+    public void promjeniTutora(tutor novi)
+    {
+       try
+        {
+            db.tutor.Attach(novi);
+            db.Entry(novi).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void obrisiTutora(tutor novi)
+    {
+         try
+        {
+            db.tutor.Attach(novi);
+            db.Entry(novi).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+
+    #region SOAP_Kategorija
+    public void UnesiKategoriju(kategorija nova)
+    {
+        try
+        {
+            db.kategorija.Add(nova);
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public List<kategorija> vratiKategorije()
+    {
+         return db.kategorija.Where(x => true).ToList(); 
+       
+    }
+
+    public void promjeniKategoriju(kategorija nova)
+    {
+        try
+        {
+            db.kategorija.Attach(nova);
+            db.Entry(nova).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void obrisiKategoriju(kategorija nova)
+    {
+        try
+        {
+            db.kategorija.Attach(nova);
+            db.Entry(nova).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+
+    #region SOAP_Komentar
+    public List<komentar> dajKomentare()
+    {
+        return db.komentar.Where(x => true).ToList();
+    }
+
+    public void unesiKomentar(komentar novi)
+    {
+        try
+        {
+            db.komentar.Add(novi);
+            db.SaveChanges();
+        }
+        catch (Exception) { Console.WriteLine("Nije unesen"); }
+    }
+
+    public void promjeniKomentar(komentar novi)
+    {
+         try
+        {
+            db.komentar.Attach(novi);
+            db.Entry(novi).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    
+    }
+
+    public void obrisiKomentar(komentar novi)
+    {
+       try
+        {
+            db.komentar.Attach(novi);
+            db.Entry(novi).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+    
+    #region SOAP_Oglas
+    public List<oglas> dajOglase()
+    {
+        return db.oglas.Where(x => true).ToList();
+    }
+
+    public void unesiOglas(oglas novi)
+    {
+        try
+        {
+            db.oglas.Add(novi);
+            db.SaveChanges();
+        }
+        catch (Exception) { Console.WriteLine("Nije unesen"); }
+    }
+
+    public void promjeniOglas(oglas novi)
+    {
+        try
+        {
+            db.oglas.Attach(novi);
+            db.Entry(novi).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void obrisiOglas(oglas novi)
+    {
+        try
+        {
+            db.oglas.Attach(novi);
+            db.Entry(novi).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+
+    #region SOAP_Poruka
+    public List<poruka> dajPoruke()
+    {
+        return db.poruka.Where(x => true).ToList();
+    }
+
+    public void unesiPoruka(poruka novi)
+    {
+        try
+        {
+            db.poruka.Add(novi);
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void promjeniPoruka(poruka novi)
+    {
+        try
+        {
+            db.poruka.Attach(novi);
+            db.Entry(novi).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void obrisiPoruka(poruka novi)
+    {
+        try
+        {
+            db.poruka.Attach(novi);
+            db.Entry(novi).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+
+    #region SOAP_Strucnost
+    public List<strucnost> dajStrucnosti()
+    {
+        return db.strucnost.Where(x => true).ToList();
+    }
+
+    public void unesiStrucnost(strucnost novi)
+    {
+        try
+        {
+            db.strucnost.Add(novi);
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void promjeniStrucnost(strucnost novi)
+    {
+        try
+        {
+            db.strucnost.Attach(novi);
+            db.Entry(novi).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+
+    public void obrisiStrucnost(strucnost novi)
+    {
+        try
+        {
+            db.strucnost.Attach(novi);
+            db.Entry(novi).State = EntityState.Deleted;
+            db.SaveChanges();
+        }
+        catch (Exception e) { Console.WriteLine(e.StackTrace); }
+    }
+    #endregion
+
+    #endregion
 }
