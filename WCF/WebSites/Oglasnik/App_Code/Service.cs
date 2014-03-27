@@ -11,9 +11,11 @@ using System.Text;
 using System.Web.Script.Serialization;
 
 // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service" in code, svc and config file together.
+[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
 public class Service : IService
 {
     bazaEntities db = new bazaEntities();
+    List<string> prijava = new List<string>();
     #region REST
     #region REST_Korisnik
     public korisnik GetKorisnik(string idkorisnika)
@@ -582,31 +584,58 @@ public class Service : IService
     #region SOAP_Korisnik
     public korisnik Login(string user, string pass)
     {
-        try
-        {
-            korisnik k = db.korisnik.SingleOrDefault(x => x.username == user && x.password == pass);
+    //    try
+     //   {
+            bazaEntities db = new bazaEntities();
+            korisnik k = new korisnik();
+            var rezultat = db.korisnik.SingleOrDefault(x => x.username.Equals(user) && x.password.Equals(pass));
+            k.idkorisnik = rezultat.idkorisnik;
+            k.ime = rezultat.ime;
+            k.prezime = rezultat.prezime;
+            k.username = rezultat.username;
+            k.password = rezultat.password;
+
+            k.profil = rezultat.profil;
+            k.telefon = rezultat.telefon;
+            k.email = rezultat.email;
+            k.boraviste = rezultat.boraviste;
+
+           if (k != null) { prijava.Add(OperationContext.Current.SessionId); }
             return k;
-        }
-        catch (Exception) { return null; }
+      //  }
+    //    catch (Exception)
+      //  {
+     //       korisnik n = new korisnik();
+       //     n.ime = "Ne radi pretrazivanje";
+      //      
+      //      return n; }
     }
 
     public void Logout()
     {
-        throw new NotImplementedException();
+        prijava.Remove(OperationContext.Current.SessionId);
     }
 
     public List<korisnik> dajKorisnike()
     {
-        List<korisnik> lista = db.korisnik.Where(x=>true).ToList();
-        return lista;
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            List<korisnik> lista = db.korisnik.Where(x => true).ToList();
+            return lista;
+        }
+        else return null;
     }
 
     public void unesiKorisnika(korisnik novi)
     {
         try
         {
-            db.korisnik.Add(novi);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.korisnik.Add(novi);
+                db.SaveChanges();
+            }
+           
         }
         catch (Exception) { Console.WriteLine("Nije unesen"); }
     }
@@ -615,9 +644,12 @@ public class Service : IService
     {
         try
         {
-            db.korisnik.Attach(novi);
-            db.Entry(novi).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.korisnik.Attach(novi);
+                db.Entry(novi).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -626,9 +658,12 @@ public class Service : IService
     {
         try
         {
-            db.korisnik.Attach(novi);
-            db.Entry(novi).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.korisnik.Attach(novi);
+                db.Entry(novi).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -640,6 +675,7 @@ public class Service : IService
         try
         {
             tutor k = db.tutor.SingleOrDefault(x => x.username == user && x.password == pass);
+            if (k != null) { prijava.Add(OperationContext.Current.SessionId); }
             return k;
         }
         catch (Exception) { return null; }
@@ -647,21 +683,28 @@ public class Service : IService
 
     public void LogoutTutor()
     {
-        throw new NotImplementedException();
+        prijava.Remove(OperationContext.Current.SessionId);
     }
 
     public List<tutor> dajTutore()
     {
-        List<tutor> lista = db.tutor.Where(x=>true).ToList();
-        return lista;
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            List<tutor> lista = db.tutor.Where(x => true).ToList();
+            return lista;
+        }
+        else return null;
     }
 
     public void unesiTutora(tutor novi)
     {
          try
         {
-            db.tutor.Add(novi);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.tutor.Add(novi);
+                db.SaveChanges();
+            }
         }
         catch (Exception) { Console.WriteLine("Nije unesen"); }
     }
@@ -670,9 +713,12 @@ public class Service : IService
     {
        try
         {
-            db.tutor.Attach(novi);
-            db.Entry(novi).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.tutor.Attach(novi);
+                db.Entry(novi).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -681,9 +727,12 @@ public class Service : IService
     {
          try
         {
-            db.tutor.Attach(novi);
-            db.Entry(novi).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.tutor.Attach(novi);
+                db.Entry(novi).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -694,15 +743,22 @@ public class Service : IService
     {
         try
         {
-            db.kategorija.Add(nova);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.kategorija.Add(nova);
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
 
     public List<kategorija> vratiKategorije()
     {
-         return db.kategorija.Where(x => true).ToList(); 
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            return db.kategorija.Where(x => true).ToList();
+        }
+        else return null;
        
     }
 
@@ -710,9 +766,12 @@ public class Service : IService
     {
         try
         {
-            db.kategorija.Attach(nova);
-            db.Entry(nova).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.kategorija.Attach(nova);
+                db.Entry(nova).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -721,9 +780,12 @@ public class Service : IService
     {
         try
         {
-            db.kategorija.Attach(nova);
-            db.Entry(nova).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.kategorija.Attach(nova);
+                db.Entry(nova).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -732,15 +794,22 @@ public class Service : IService
     #region SOAP_Komentar
     public List<komentar> dajKomentare()
     {
-        return db.komentar.Where(x => true).ToList();
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            return db.komentar.Where(x => true).ToList();
+        }
+        else return null;
     }
 
     public void unesiKomentar(komentar novi)
     {
         try
         {
-            db.komentar.Add(novi);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.komentar.Add(novi);
+                db.SaveChanges();
+            }
         }
         catch (Exception) { Console.WriteLine("Nije unesen"); }
     }
@@ -749,9 +818,12 @@ public class Service : IService
     {
          try
         {
-            db.komentar.Attach(novi);
-            db.Entry(novi).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.komentar.Attach(novi);
+                db.Entry(novi).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     
@@ -761,9 +833,12 @@ public class Service : IService
     {
        try
         {
-            db.komentar.Attach(novi);
-            db.Entry(novi).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.komentar.Attach(novi);
+                db.Entry(novi).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -772,15 +847,22 @@ public class Service : IService
     #region SOAP_Oglas
     public List<oglas> dajOglase()
     {
-        return db.oglas.Where(x => true).ToList();
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            return db.oglas.Where(x => true).ToList();
+        }
+        else return null;
     }
 
     public void unesiOglas(oglas novi)
     {
         try
         {
-            db.oglas.Add(novi);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.oglas.Add(novi);
+                db.SaveChanges();
+            }
         }
         catch (Exception) { Console.WriteLine("Nije unesen"); }
     }
@@ -789,9 +871,12 @@ public class Service : IService
     {
         try
         {
-            db.oglas.Attach(novi);
-            db.Entry(novi).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.oglas.Attach(novi);
+                db.Entry(novi).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -800,9 +885,12 @@ public class Service : IService
     {
         try
         {
-            db.oglas.Attach(novi);
-            db.Entry(novi).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.oglas.Attach(novi);
+                db.Entry(novi).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -811,15 +899,22 @@ public class Service : IService
     #region SOAP_Poruka
     public List<poruka> dajPoruke()
     {
-        return db.poruka.Where(x => true).ToList();
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            return db.poruka.Where(x => true).ToList();
+        }
+        else return null;
     }
 
     public void unesiPoruka(poruka novi)
     {
         try
         {
-            db.poruka.Add(novi);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.poruka.Add(novi);
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -828,9 +923,12 @@ public class Service : IService
     {
         try
         {
-            db.poruka.Attach(novi);
-            db.Entry(novi).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.poruka.Attach(novi);
+                db.Entry(novi).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -839,9 +937,12 @@ public class Service : IService
     {
         try
         {
-            db.poruka.Attach(novi);
-            db.Entry(novi).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.poruka.Attach(novi);
+                db.Entry(novi).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -850,15 +951,22 @@ public class Service : IService
     #region SOAP_Strucnost
     public List<strucnost> dajStrucnosti()
     {
-        return db.strucnost.Where(x => true).ToList();
+        if (prijava.Contains(OperationContext.Current.SessionId))
+        {
+            return db.strucnost.Where(x => true).ToList();
+        }
+        else return null;
     }
 
     public void unesiStrucnost(strucnost novi)
     {
         try
         {
-            db.strucnost.Add(novi);
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.strucnost.Add(novi);
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -867,9 +975,12 @@ public class Service : IService
     {
         try
         {
-            db.strucnost.Attach(novi);
-            db.Entry(novi).State = EntityState.Modified;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.strucnost.Attach(novi);
+                db.Entry(novi).State = EntityState.Modified;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }
@@ -878,9 +989,12 @@ public class Service : IService
     {
         try
         {
-            db.strucnost.Attach(novi);
-            db.Entry(novi).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (prijava.Contains(OperationContext.Current.SessionId))
+            {
+                db.strucnost.Attach(novi);
+                db.Entry(novi).State = EntityState.Deleted;
+                db.SaveChanges();
+            }
         }
         catch (Exception e) { Console.WriteLine(e.StackTrace); }
     }

@@ -9,7 +9,7 @@ using System.ServiceModel.Web;
 using System.Text;
 
 // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService" in both code and config file together.
-[ServiceContract]
+[ServiceContract(SessionMode = SessionMode.Required)]
 public interface IService
 {
     #region REST
@@ -122,17 +122,17 @@ public interface IService
     #region SOAP
     #region SOAP_Korisnik
 
-    [OperationContract]
+    [OperationContract(IsInitiating = true)]
     korisnik Login(string user, string pass);
-    [OperationContract]
+   [OperationContract(IsTerminating = true,IsInitiating=false)]
     void Logout();
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     List<korisnik> dajKorisnike();
-    [OperationContract]
+   [OperationContract(IsInitiating = false)]
     void unesiKorisnika(korisnik novi);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void promjeniKorisnika(korisnik novi);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void obrisiKorisnika(korisnik novi);
 
 
@@ -140,77 +140,77 @@ public interface IService
 
     #region SOAP_Tutor
 
-    [OperationContract]
+  [OperationContract(IsInitiating = true)]
     tutor LoginTutor(string user, string pass);
-    [OperationContract]
+    [OperationContract(IsTerminating = true,IsInitiating=false)]
     void LogoutTutor();
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     List<tutor> dajTutore();
-    [OperationContract]
+   [OperationContract(IsInitiating = false)]
     void unesiTutora(tutor novi);
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void promjeniTutora(tutor novi);
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void obrisiTutora(tutor novi);
 
 
     #endregion
 
     #region SOAP_Kategorija
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void UnesiKategoriju(kategorija nova);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     List<kategorija> vratiKategorije();
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void promjeniKategoriju(kategorija nova);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void obrisiKategoriju(kategorija nova);
 
     #endregion
 
     #region SOAP_Komentar
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     List<komentar> dajKomentare();
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void unesiKomentar(komentar novi);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void promjeniKomentar(komentar novi);
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void obrisiKomentar(komentar novi);
 
     #endregion
 
     #region SOAP_Oglas
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     List<oglas> dajOglase();
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void unesiOglas(oglas novi);
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void promjeniOglas(oglas novi);
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void obrisiOglas(oglas novi);
     #endregion
 
     #region SOAP_Poruka
 
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     List<poruka> dajPoruke();
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void unesiPoruka(poruka novi);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void promjeniPoruka(poruka novi);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void obrisiPoruka(poruka novi);
     #endregion
 
     #region SOAP_Strucnost
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     List<strucnost> dajStrucnosti();
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void unesiStrucnost(strucnost novi);
-    [OperationContract]
+    [OperationContract(IsInitiating = false)]
     void promjeniStrucnost(strucnost novi);
-    [OperationContract]
+     [OperationContract(IsInitiating = false)]
     void obrisiStrucnost(strucnost novi);
 
     #endregion
