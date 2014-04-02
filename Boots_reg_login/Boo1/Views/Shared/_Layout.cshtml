@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        
+
+
+        @Scripts.Render("~/bundles/modernizr")
+        @Styles.Render("~/Content/Bootstrap")
+
+        <style>
+            body {
+                padding-top: 70px;
+                 }
+        </style>
+    </head>
+    <body>
+
+        @*Html.Partial("_LoginPartial")*@
+       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Tutori</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            
+                        
+                    
+          <form class="navbar-form navbar-right" role="form">
+            <div class="form-group">
+              @*<input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button> *@
+                
+                   <div style="width:auto; background-color: #808080;">
+                        @if (Request.IsAuthenticated){
+                            <strong>@Html.Encode(User.Identity.Name)</strong>
+                            <ul class="nav nav-pills pull-right">
+                           <li> @Html.ActionLink("Log Out", "Logout", "Korisnik") </li>
+                                </ul>
+                        }
+                        else{
+                            <ul class="nav nav-pills pull-right">
+                          <li>  @Html.ActionLink("Register", "Registration", "Korisnik") </li>
+                            
+                          <li> @Html.ActionLink("Log In", "Login", "Korisnik")  </li>
+                                </ul>
+                        }
+                       
+                         
+          </div>
+                </div>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+        @if(IsSectionDefined("featured")){
+        <div class="hero-unit">
+
+        @RenderSection("featured", required: false)
+        </div>
+        }
+        
+        @RenderBody()
+
+    </div>
+        
+                
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/Scripts/Bootstrap")
+
+        @RenderSection("scripts", required: false)
+    </body>
+</html>
